@@ -29,9 +29,27 @@
   */
 
 var Tree = function(value) {
+ var newTree = {}
   this.value = value;
   this.children = [];
+
 };
 
+Tree.prototype.addChild = function(value) {
+  var newChild = new Tree(value)
+  this.children.push(newChild)
+  return newChild
+};
 
+Tree.prototype.map = function (iterator , newTree) {
 
+  var newTreee = newTree || new Tree(iterator(this.value))
+    if(this.children !== []){
+      for (var i = 0; i < this.children.length; i++) {
+        var branch = newTreee.addChild(iterator(this.children[i].value))
+        if(this.children[i] !== [] ){
+          this.children[i].map(iterator, newTree)
+        }
+      }
+    }
+}
