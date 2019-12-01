@@ -28,28 +28,55 @@
   *  root1.value // still 1
   */
 
+// var Tree = function(value) {
+//   this.value = value;
+//   this.children = [];
+// };
+
+// Tree.prototype.addChild = function(value) {
+//   var newChild = new Tree(value);
+//   this.children.push(newChild);
+//   return newChild;
+// };
+
+// Tree.prototype.map = function (iterator , newTree) {
+
+//   var newTreee = newTree || new Tree(iterator(this.value))
+//     if(this.children !== []){
+//       for (var i = 0; i < this.children.length; i++) {
+//         var branch = newTreee.addChild(iterator(this.children[i].value))
+//         if(this.children[i] !== [] ){
+//           this.children[i].map(iterator, newTree)
+//         }
+//       }
+//     }
+// }
+
+
 var Tree = function(value) {
- var newTree = {}
   this.value = value;
   this.children = [];
-
 };
 
-Tree.prototype.addChild = function(value) {
-  var newChild = new Tree(value)
-  this.children.push(newChild)
-  return newChild
+Tree.prototype.addChild = function(value){
+  var child = new Tree(value)
+  this.children.push(child) 
+  return child
 };
 
-Tree.prototype.map = function (iterator , newTree) {
-
-  var newTreee = newTree || new Tree(iterator(this.value))
-    if(this.children !== []){
-      for (var i = 0; i < this.children.length; i++) {
-        var branch = newTreee.addChild(iterator(this.children[i].value))
-        if(this.children[i] !== [] ){
-          this.children[i].map(iterator, newTree)
+Tree.prototype.map = function (iterator) {
+  var mappedTree =  new Tree(iterator(this.value));
+  
+  var looper = (origin = this,mapped = mappedTree) => {
+    if (origin.children.length) {
+      for (var child in origin.children) {
+        mapped.addChild(iterator(origin.children[child].value))
+        if (origin.children[child].children.length) {
+          looper(origin.children[child],mapped.children[child])
         }
       }
     }
+  };
+  looper();
+  return mappedTree;
 }
